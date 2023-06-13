@@ -1,8 +1,19 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import css from './style.module.css';
+import { deleteContactAction } from '../store/phonebookReducer';
 
-function ContactList({ onDeleteContact }) {
+// Використання createReducer
+// // import { deleteContactAction } from '../store/actions';
+// Використання createReducer
+
+function ContactList() {
+  const dispatch = useDispatch();
+
+  const onDeleteContact = contactId => {
+    dispatch(deleteContactAction(contactId));
+  };
+
   const { contacts, filter } = useSelector(state => state);
   const filterCor = filter.toLowerCase();
   const visibleContacts = contacts.filter(contact =>

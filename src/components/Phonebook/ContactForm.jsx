@@ -1,28 +1,43 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { UseContacsState } from '../store/useContacsState';
 import css from './style.module.css';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { addContactAction } from '../store/phonebookReducer';
+import { validationSchema } from './validationSchema';
 
-const validationSchema = Yup.object({
-  name: Yup.string()
-    .matches(
-      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-      "Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-    )
-    .required('required'),
-  number: Yup.string()
-    .matches(
-      /^[+]?[0-9]{1,4}?[-.\s]?[(]?[0-9]{1,3}[)]?[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9}$/,
-      'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +'
-    )
-    .required('required'),
-});
+// Використання createReducer
+// import { addContactAction } from '../store/actions';
+// Використання createReducer
 
-function ContactForm({ handleAddContact }) {
-  const onSubmit = (values, actions) => {
-    handleAddContact({ ...values });
+function ContactForm() {
+  const dispatch = useDispatch();
+
+  const { contacts } = UseContacsState();
+
+  const onSubmit = ({ name, number }, actions) => {
+    if (isContactExist(name, number)) {
+      alert(`Name ${name} is already in contacts`);
+      return;
+    }
+
+    const newContact = {
+      id: Date.now(),
+      name,
+      number,
+    };
+    dispatch(addContactAction(newContact));
+
     actions.resetForm();
+  };
+  const isContactExist = (name, number) => {
+    if (contacts && contacts.length > 0) {
+      return contacts.some(
+        contact =>
+          contact.name && contact.name.toLowerCase() === name.toLowerCase()
+      );
+    }
+    return false;
   };
 
   return (
@@ -52,7 +67,3 @@ function ContactForm({ handleAddContact }) {
 }
 
 export default ContactForm;
-
-ContactForm.propTypes = {
-  handleAddContact: PropTypes.func.isRequired,
-};

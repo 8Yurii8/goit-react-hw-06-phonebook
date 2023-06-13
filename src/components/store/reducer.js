@@ -1,3 +1,3 @@
-import { phonebookReducer } from './phonebookReducer';
+import phonebookReducer from './phonebookReducer';
 
 export const reducer = phonebookReducer;

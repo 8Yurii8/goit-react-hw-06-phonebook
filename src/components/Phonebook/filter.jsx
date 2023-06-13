@@ -1,10 +1,13 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { filterChangeAction } from '../store/actions';
+import { filterChangeAction } from '../store/phonebookReducer';
 
-export const Filter = ({ value }) => {
+// Використання createReducer
+// import { filterChangeAction } from '../store/actions';
+// Використання createReducer
+
+export const Filter = () => {
   const dispatch = useDispatch();
-
   const handleChange = e => {
     dispatch(filterChangeAction(e.target.value));
   };
@@ -12,7 +15,7 @@ export const Filter = ({ value }) => {
   return (
     <label>
       Filter contacts by name:
-      <input type="text" value={value} onChange={handleChange} />
+      <input type="text" onChange={handleChange} />
     </label>
   );
 };
